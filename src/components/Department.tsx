@@ -3,23 +3,26 @@ import { Card } from 'antd'
 import * as api from '../api/api'
 
 function Department(props: {
-    code: string
+    code: string,
+    name: string,
+    regionCode: string
 }) {
-    const [departmentName, setDepartmentName] = React.useState("")
-
+    const [departmentRegion, setDepartmentRegion] = React.useState("")
+    
     React.useEffect(() => {
-        api.getDepartmentInfo(props.code).then(response => {
-            setDepartmentName(response.data.nom)
+        api.getRegionInfo(props.regionCode).then(regionInfoResponse => {
+            setDepartmentRegion(regionInfoResponse.data.nom)
         })
-    }, [])
+    }, [props.regionCode])
 
     return (
         <Card.Grid
             className="card-grid"
             hoverable={false}
         >
-            <p>Name: {departmentName}</p>
+            <p>Name: {props.name}</p>
             <p>Code: {props.code}</p>
+            <p>Region Name: {departmentRegion}</p>
         </Card.Grid>
     )
 }

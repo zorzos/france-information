@@ -14,6 +14,8 @@ function DepartmentList(props: {
                     <Department 
                         code={department.code}
                         key={department.code}
+                        name={department.nom}
+                        regionCode={department.codeRegion}
                     />
                 )
             })}

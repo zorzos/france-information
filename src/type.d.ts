@@ -8,3 +8,8 @@ export interface DepartmentType {
     code: string
     codeRegion: string
 }
+
+export interface NotificationDetails {
+    message: string
+    description: string
+}

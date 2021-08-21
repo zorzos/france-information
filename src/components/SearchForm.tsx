@@ -5,65 +5,95 @@ const { Option } = Select
 
 function SearchForm(props: {
     regions: RegionType[],
-    search:(regionCode: string, departmentCode: string) => void
+    search:(regionCode: string, departmentCode: string) => void,
+    clearResults:() => void
 }) {
-    const [regionInactive, setRegionInactive] = React.useState(false)
     const [regionCode, setRegionCode] = React.useState("")
     const [departmentCode, setDepartmentCode] = React.useState("")
+    const [regionInactive, setRegionInactive] = React.useState(false)
+    const [searchInactive, setSearchInactive] = React.useState(true)
+    const [clearInactive, setClearInactive] = React.useState(true)
 
-    const onDepartmentChange = (departmentCode: string) => {
-        if (departmentCode === "") {
-            setRegionInactive(false)
-        } else {
-            setRegionInactive(true)
-        }
+    const [form] = Form.useForm()
 
-        setDepartmentCode(departmentCode)
-    }
-
-    const onRegionChange = (regionCode: any) => {
-        setRegionCode(regionCode)
-    }
-
-    const buildSelectOptions = (regions: RegionType[]) => {
-        return regions.map(region => {
+    const buildSelectOptions = () => {
+        return props.regions.map(region => {
             return <Option key={region.code} value={region.code}>{region.nom}</Option>
         })
     }
 
+    const onClear = () => {
+        setRegionInactive(false)
+        setClearInactive(true)
+        setSearchInactive(true)
+        setDepartmentCode("")
+        setRegionCode("")
+        form.resetFields([ 'departmentCode' ])
+        form.setFieldsValue({
+            regionCode: undefined
+        })
+        props.clearResults()
+    }
+
+    const onSearchClicked = () => {
+        setClearInactive(false)
+        props.search(regionCode, departmentCode)
+    }
+
+    React.useEffect(() => {
+        if (regionCode === "" && departmentCode === "") {
+            setSearchInactive(true)
+        } else if (regionCode !== "" || departmentCode !== "") {
+            if (departmentCode !== "") {
+                setRegionInactive(true)
+            } else {
+                setRegionInactive(false)
+            }
+            setSearchInactive(false)
+        }
+    }, [regionCode, departmentCode])
+
     return (
         <Form
+            form={form}
             name="basic"
+            initialValues={{ departmentCode: "" }}
         >
-            <Form.Item
-                label="Region"
-                name="Region"
-            >
+            <Form.Item label="Region" name="regionCode">
                 <Select
                     placeholder="Please select a Region"
                     disabled={regionInactive}
-                    onChange={value => onRegionChange(value)}
+                    onChange={selection => setRegionCode(selection)}
+                    value={regionCode}
                 >
-                    {buildSelectOptions(props.regions)}
+                    {buildSelectOptions()}
                 </Select>
             </Form.Item>
 
-            <Form.Item
-                label="Department Code"
-                name="Department Code"
-            >
+            <Form.Item label="Department Code" name="departmentCode">
                 <Input
-                    onChange={event => onDepartmentChange(event.target.value)}
+                    onChange={event => setDepartmentCode(event.target.value)}
+                    value={departmentCode}
                 />
             </Form.Item>
 
             <Form.Item>
                 <Button
+                    className="search-button"
                     type="primary"
                     htmlType="submit"
-                    onClick={() => props.search(regionCode, departmentCode)}
+                    disabled={searchInactive}
+                    onClick={() => onSearchClicked()}
                 >
                     Search
+                </Button>
+                <Button
+                    className="clear-button"
+                    type="default"
+                    disabled={clearInactive}
+                    onClick={() => onClear()}
+                >
+                    Clear results
                 </Button>
             </Form.Item>
         </Form>

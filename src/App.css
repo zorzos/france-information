@@ -7,5 +7,17 @@
 }
 
 .card-grid {
-    width: 25%;
+    width: 20%;
+}
+
+.clear-button {
+    margin-left: 10px;
+}
+
+.error-message {
+    color: red;
+}
+
+.spinner {
+   display: block;
 }
