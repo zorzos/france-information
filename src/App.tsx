@@ -5,11 +5,7 @@ import * as api from './api/api'
 import SearchForm from './components/SearchForm'
 import { useSelector, useDispatch, DefaultRootState } from 'react-redux'
 import * as actions from "./redux/actions"
-import {
-  RegionType, 
-  DepartmentType,
-  NotificationDetails
-} from './type'
+import { RegionType, DepartmentType, NotificationDetails } from './type'
 import DepartmentList from './components/DepartmentList';
 
 interface DefaultState extends DefaultRootState {
@@ -49,7 +45,7 @@ function App() {
           message: 'Error!',
           description
         }
-        openNotification('error', details)
+        notification.error(details)
         setSearchLoadIndicator(false)
       })
     } else if (regionCode) {
@@ -62,23 +58,9 @@ function App() {
           message: 'Error!',
           description: 'Something went wrong, please try again!'
         }
-        openNotification('error', details)
+        notification.error(details)
         setSearchLoadIndicator(false)
       })
-    }
-  }
-
-  const openNotification = (type: string, details: NotificationDetails) => {
-    const args = {message: details.message, description: details.description}
-    switch (type) {
-      case 'success':
-        notification.success(args)
-        break
-      case 'error':
-        notification.error(args)
-        break
-      default:
-        break
     }
   }
 

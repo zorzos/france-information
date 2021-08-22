@@ -54,11 +54,7 @@ function SearchForm(props: {
     }, [regionCode, departmentCode])
 
     return (
-        <Form
-            form={form}
-            name="basic"
-            initialValues={{ departmentCode: "" }}
-        >
+        <Form form={form} name="basic" initialValues={{ departmentCode: "" }}>
             <Form.Item label="Region" name="regionCode">
                 <Select
                     placeholder="Please select a Region"
